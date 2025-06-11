@@ -3,6 +3,7 @@ const path = require('path');
 let {labelMap, wordIndex} = require('./data_labels');
 const label_map = require('./label_map.json');
 const word_index = require('./word_index.json');
+const pool = require('./pool');
 let model;
 
 const loadPrediction = async () => {
@@ -68,6 +69,14 @@ async function predict(request, h) {
     const prediction = models.predict(inputTensor)
     const predictedClass = prediction.argMax(-1).dataSync()[0]
     const predictedLabel = labelMap[predictedClass]
+
+    pool.query('INSERT INTO texts (text) VALUES ($1)', [requestValue.text], (err, res) => {
+      if (err) {
+        console.error("Error inserting text into database:", err);
+      } else {
+        console.log("Text inserted successfully:", requestValue.text);
+      }
+    });
 
     return h.response({
       result: predictedLabel
