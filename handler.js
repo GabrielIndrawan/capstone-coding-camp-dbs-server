@@ -92,5 +92,23 @@ async function predict(request, h) {
 
 }
 
+async function getAllPredictions(request, h){
+  try{
+    const result = await pool.query('SELECT * FROM texts');
+    if (result.rows.length === 0) {
+      return h.response({
+        message: "No predictions found"
+      }).code(404);
+    }
+    return h.response(result.rows).code(200);
+  }catch(error){
+    console.error("Error fetching predictions:", error);
+    return h.response({
+      error: "Failed to fetch predictions",
+      details: error.message
+    }).code(500);
+  }
+}
 
-module.exports = predict;
+
+module.exports = {predict, getAllPredictions};

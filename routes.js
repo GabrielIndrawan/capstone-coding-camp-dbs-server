@@ -1,4 +1,4 @@
-const predict = require("./handler");
+const {predict, getAllPredictions} = require("./handler");
 
 const routes = [
     {
@@ -12,6 +12,11 @@ const routes = [
         method: "POST",
         path: '/prediction',
         handler: predict
+    },
+    {
+        method: "GET",
+        path: '/prediction',
+        handler: getAllPredictions
     }
 ]
 
