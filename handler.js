@@ -70,7 +70,7 @@ async function predict(request, h) {
     const predictedClass = prediction.argMax(-1).dataSync()[0]
     const predictedLabel = labelMap[predictedClass]
 
-    pool.query('INSERT INTO texts (text) VALUES ($1)', [requestValue.text], (err, res) => {
+    pool.query('INSERT INTO texts (text, result) VALUES ($1,$2)', [requestValue.text, predictedLabel], (err, res) => {
       if (err) {
         console.error("Error inserting text into database:", err);
       } else {
