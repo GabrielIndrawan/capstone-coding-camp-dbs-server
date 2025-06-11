@@ -8,7 +8,7 @@ let model;
 
 const loadPrediction = async () => {
     try{
-        const dirPath = path.resolve(__dirname,'../tfjs_model_fix/model.json');
+        const dirPath = path.resolve(__dirname,'./tfjs_model_fix/model.json');
         model = await tf.loadLayersModel(`file://${dirPath}`);
         return model;
     }catch(error){
