@@ -1,4 +1,4 @@
-const {predict, getAllPredictions} = require("./handler");
+const {predict, getAllPredictions, deleteAllPredictions} = require("./handler");
 
 const routes = [
     {
@@ -17,6 +17,11 @@ const routes = [
         method: "GET",
         path: '/prediction',
         handler: getAllPredictions
+    },
+    {
+        method: "DELETE",
+        path: '/prediction',
+        handler: deleteAllPredictions
     }
 ]
 

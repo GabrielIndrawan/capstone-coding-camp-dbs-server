@@ -64,11 +64,11 @@ async function predict(request, h) {
     loadWordIndex();
 
     const requestValue = request.payload;
-    const tokens = preprocessText(requestValue.text)
-    const inputTensor = tf.tensor2d([tokens], [1, tokens.length])
-    const prediction = models.predict(inputTensor)
-    const predictedClass = prediction.argMax(-1).dataSync()[0]
-    const predictedLabel = labelMap[predictedClass]
+    const tokens = preprocessText(requestValue.text);
+    const inputTensor = tf.tensor2d([tokens], [1, tokens.length]);
+    const prediction = models.predict(inputTensor);
+    const predictedClass = prediction.argMax(-1).dataSync()[0];
+    const predictedLabel = labelMap[predictedClass];
 
     pool.query('INSERT INTO texts (text, result) VALUES ($1,$2)', [requestValue.text, predictedLabel], (err, res) => {
       if (err) {
@@ -110,5 +110,19 @@ async function getAllPredictions(request, h){
   }
 }
 
+async function deleteAllPredictions(request, h) {
+  try {
+    await pool.query('DELETE FROM texts');
+    return h.response({
+      message: "All predictions deleted successfully"
+    }).code(200);
+  } catch (error) {
+    console.error("Error deleting predictions:", error);
+    return h.response({
+      error: "Failed to delete predictions",
+      details: error.message
+    }).code(500);
+  }
+}
 
-module.exports = {predict, getAllPredictions};
+module.exports = {predict, getAllPredictions, deleteAllPredictions};
